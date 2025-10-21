@@ -15,7 +15,7 @@ int main()
 void cityManagement()
 {
     int choice;
-        printf("/n --- City Management ---\n");
+        printf("\n --- City Management ---\n");
         printf("1. Add City\n2. Rename City\n3. Remove City\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -33,7 +33,7 @@ void cityManagement()
 
 }
 
-void addCity(char cities[MAX_CITIES], int cityCount)
+void addCity(char cities[MAX_CITIES][50], int cityCount)
 {
     if(cityCount>=MAX_CITIES)
     {
@@ -44,8 +44,36 @@ void addCity(char cities[MAX_CITIES], int cityCount)
     int n;
     printf("Number of cities to add: (max=%d)",MAX_CITIES-cityCount);
     scanf("%d",&n);
-    for(int i=0; i<n; n++)
-    {
-        printf("Enter the city name");
+
+    if(n>MAX_CITIES-cityCount){
+        printf("Invalid number!\n");
+        return;
     }
+    for(int i=0; i<n; i++)
+    {
+        printf("Enter the city %d name: ",i+1);
+        scanf("%s", cities[cityCount]);
+        cityCount++;
+    }
+
+    printf("Cities added successfully!\n");
+}
+
+void renameCity(char cities[MAX_CITIES][50])
+{
+    int index;
+    printf("Enter city number to rename: ");
+    scanf("%d", &index);
+
+    printf("Enter new name: ");
+    scanf("%s", &cities[index-1]);
+
+    printf("City renamed successfully");
+}
+
+void removeCity(char cities[MAX_CITIES][50], int cityCount)
+{
+    int index;
+    printf("Enter city index or city name to remove");
+
 }
