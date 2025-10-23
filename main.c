@@ -1,14 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_CITIES 30
 
+void cityManagement();
+void addCity(char cities[MAX_CITIES][50], int cityCount);
+void renameCity(char cities[MAX_CITIES][50]);
+void removeCity(char cities[MAX_CITIES][50], int cityCount);
 
 char cities[MAX_CITIES][50];
+int cityCount=0;
 
 int main()
 {
-
+    cityManagement();
     return 0;
 }
 
@@ -22,10 +28,13 @@ void cityManagement()
 
         switch(choice) {
             case 1:
+                addCity(cities, cityCount);
                 break;
             case 2:
+                renameCity(cities);
                 break;
             case 3:
+                removeCity(cities,cityCount);
                 break;
             default:
                 printf("Invalid choice!\n");
@@ -74,6 +83,14 @@ void renameCity(char cities[MAX_CITIES][50])
 void removeCity(char cities[MAX_CITIES][50], int cityCount)
 {
     int index;
-    printf("Enter city index or city name to remove");
+    printf("Enter city index remove");
+    scanf("%d", &index);
+
+    for(int i = index; i < cityCount - 1; i++)
+    {
+        strcpy(cities[i], cities[i+1]);
+    }
+    cityCount--;
+    printf("City removed.\n");
 
 }
