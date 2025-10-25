@@ -40,7 +40,7 @@ float vFuelEfficiency[3] = {12.0, 6.0, 4.0};
 int deliveryDistance[MAX_DELIVERIES];
 float deliveryCharge[MAX_DELIVERIES];
 float deliveryProfit[MAX_DELIVERIES];
-float deliveryTimeArr[MAX_DELIVERIES];
+float deliveryTime[MAX_DELIVERIES];
 int deliveryCount = 0;
 
 int main()
@@ -357,7 +357,7 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
     }
 
     float baseCost = calculateDeliveryCost(minDist,vRate[vType],weight);
-    float deliveryTime = calculateDeliveryTime(minDist,vSpeed[vType]);
+    float deliveryTimeCalc = calculateDeliveryTime(minDist,vSpeed[vType]);
     float fuelUsed = calculateFuelUsed(minDist, vFuelEfficiency[vType]);
     float fuelCost = calculateFuelCost(fuelUsed);
     float totalCost = baseCost + fuelCost;
@@ -378,12 +378,12 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
     printf("Operational Cost: %.2f LKR\n",totalCost);
     printf("Profit: %.2f LKR\n",profit);
     printf("Customer Charge: %.2f LKR\n",customerCharge);
-    printf("Estimated Time: %.2f hours\n",deliveryTime);
+    printf("Estimated Time: %.2f hours\n",deliveryTimeCalc);
 
     deliveryDistance[deliveryCount] = minDist;
     deliveryCharge[deliveryCount] = customerCharge;
     deliveryProfit[deliveryCount] = profit;
-    deliveryTimeArr[deliveryCount] = deliveryTime;
+    deliveryTime[deliveryCount] = deliveryTimeCalc;
     deliveryCount++;
 }
 
