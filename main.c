@@ -189,7 +189,7 @@ void removeCity(char cities[MAX_CITIES][50], int *cityCount, int distance[MAX_CI
 
 void displayCities(char cities[MAX_CITIES][50], int *cityCount)
 {
-    if(cityCount == 0) {
+    if(*cityCount == 0) {
         printf("No cities added yet!\n");
         return;
     }
@@ -342,6 +342,7 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
     }
 
 
+
 }
 
 float calculateDeliveryCost(float D, float R, int weight)
@@ -374,3 +375,36 @@ float calculateCustomerCharge(float totalCost, float profit)
     return totalCost+profit;
 }
 
+void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, int minDist, int path[4], int pathLen, int *cityCount)
+{
+    if(distance[src][dest]>0)
+    {
+        minDist = distance[src][dest];
+        path[0] = src;
+        path [1] = dest;
+        pathLen = 2;
+    }
+
+    for(int i=0; i< *cityCount; i++)
+    {
+        if(i !=src && i!=dest)
+        {
+            int dist1=distance[src][i];
+            int dist2=distance[i][dest];
+
+            if(dist1>0 && dist2>0)
+            {
+                int totalDist = dist1+dist2;
+
+                if(totalDist<minDist)
+                {
+                    minDist=totalDist;
+                    path[0]=src;
+                    path[1]=i;
+                    path[2]=dest;
+                    pathLen=3;
+                }
+            }
+        }
+    }
+}
