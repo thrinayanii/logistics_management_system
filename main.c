@@ -25,6 +25,8 @@ float calculateFuelCost(float fuelUsed);
 float calculateProfit(float cost);
 float calculateCustomerCharge(float totalCost, float profit);
 
+void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, int *minDist, int path[4], int *pathLen, int cityCount);
+
 char cities[MAX_CITIES][50];
 int distance[MAX_CITIES][MAX_CITIES];
 int cityCount=0;
@@ -336,12 +338,16 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
     printf("Select vehicle (1=Van, 2=Truck, 3=Lorry): ");
     scanf("%d", &vType);
 
-    if(weight > vCapacity[vType-1]) {
+    if(weight >vCapacity[vType-1]) {
         printf("Weight exceeds vehicle capacity!\n");
         return;
     }
 
+    int minDist;
+    int path[4];
+    int pathLen;
 
+    findMinDistance(distance,src,dest,&minDist, path,&pathLen, cityCount);
 
 }
 
@@ -375,17 +381,22 @@ float calculateCustomerCharge(float totalCost, float profit)
     return totalCost+profit;
 }
 
-void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, int minDist, int path[4], int pathLen, int *cityCount)
+void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, int *minDist, int path[4], int *pathLen, int cityCount)
 {
     if(distance[src][dest]>0)
     {
-        minDist = distance[src][dest];
+        *minDist = distance[src][dest];
         path[0] = src;
         path [1] = dest;
-        pathLen = 2;
+        *pathLen = 2;
+    }
+    else
+    {
+        *minDist=99999;
+        *pathLen=0;
     }
 
-    for(int i=0; i< *cityCount; i++)
+    for(int i=0; i< cityCount; i++)
     {
         if(i !=src && i!=dest)
         {
@@ -396,13 +407,13 @@ void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, in
             {
                 int totalDist = dist1+dist2;
 
-                if(totalDist<minDist)
+                if(totalDist<*minDist)
                 {
-                    minDist=totalDist;
+                    *minDist=totalDist;
                     path[0]=src;
                     path[1]=i;
                     path[2]=dest;
-                    pathLen=3;
+                    *pathLen=3;
                 }
             }
         }
