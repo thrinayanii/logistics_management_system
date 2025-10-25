@@ -8,12 +8,14 @@
 void cityManagement();
 void addCity(char cities[MAX_CITIES][50], int *cityCount);
 void renameCity(char cities[MAX_CITIES][50], int *cityCount);
-void removeCity(char cities[MAX_CITIES][50], int *cityCount);
+void removeCity(char cities[MAX_CITIES][50], int *cityCount, int distance[MAX_CITIES][MAX_CITIES]);
 void displayCities(char cities[MAX_CITIES][50], int *cityCount);
 
 void distanceManagement();
 void inputDistance(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int *cityCount);
 void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int *cityCount);
+
+void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3]);
 
 char cities[MAX_CITIES][50];
 int distance[MAX_CITIES][MAX_CITIES];
@@ -27,6 +29,7 @@ float vFuelEfficiency[3] = {12.0, 6.0, 4.0};
 
 int main()
 {
+    int choice;
     do{
         printf("\n\n===== LOGISTICS MANAGEMENT SYSTEM ======\n\n");
         printf("1. City Management\n");
@@ -35,6 +38,8 @@ int main()
         printf("4. View Delivery Records\n");
         printf("5. Performance Reports\n");
         printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
         switch(choice) {
                 case 1:
@@ -44,7 +49,7 @@ int main()
                     distanceManagement();
                     break;
                 case 3:
-                    deliveryRequest();
+                    deliveryRequest(vCapacity, vehicleTypes, vRate);
                     break;
                 case 4:
 
@@ -82,10 +87,11 @@ void cityManagement()
                 renameCity(cities, &cityCount);
                 break;
             case 3:
-                removeCity(cities, &cityCount);
+                removeCity(cities, &cityCount, distance);
                 break;
             case 4:
                 displayCities(cities, &cityCount);
+                break;
             default:
                 printf("Invalid choice!\n");
         }
@@ -106,7 +112,7 @@ void addCity(char cities[MAX_CITIES][50], int *cityCount)
     printf("Number of cities to add (max=%d) : ",MAX_CITIES-*cityCount);
     scanf("%d",&n);
 
-    if(n>MAX_CITIES-*cityCount){
+    if(n>MAX_CITIES-*cityCount || n<=0){
         printf("Invalid number!\n");
         return;
     }
@@ -140,7 +146,7 @@ void renameCity(char cities[MAX_CITIES][50], int *cityCount)
     printf("City renamed successfully");
 }
 
-void removeCity(char cities[MAX_CITIES][50], int *cityCount)
+void removeCity(char cities[MAX_CITIES][50], int *cityCount, int distance[MAX_CITIES][MAX_CITIES] )
 {
     if(*cityCount == 0)
     {
@@ -151,7 +157,7 @@ void removeCity(char cities[MAX_CITIES][50], int *cityCount)
     displayCities(cities, cityCount);
 
     int index;
-    printf("Enter city index remove");
+    printf("Enter city index remove: ");
     scanf("%d", &index);
 
     if(index <= 0 || index > *cityCount) {
@@ -162,6 +168,11 @@ void removeCity(char cities[MAX_CITIES][50], int *cityCount)
     for(int i = index-1; i < *cityCount - 1; i++)
     {
         strcpy(cities[i], cities[i+1]);
+        for(int j = 0; j < *cityCount; j++)
+        {
+            distance[i][j] = distance[i + 1][j];
+            distance[j][i] = distance[j][i + 1];
+        }
     }
     (*cityCount)--;
     printf("City removed.\n");
@@ -184,8 +195,9 @@ void displayCities(char cities[MAX_CITIES][50], int *cityCount)
 void distanceManagement()
 {
     int choice;
+    do{
         printf("\n --- Distance Management ---\n");
-        printf("1. Input or Edit Distance\n2. Display Distance Table\n");
+        printf("1. Input or Edit Distance\n2. Display Distance Table\n3. Back\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
 
@@ -197,16 +209,18 @@ void distanceManagement()
                 displayDistanceTable(cities, distance, &cityCount);
                 break;
             case 3:
-
                 break;
             default:
                 printf("Invalid choice!\n");
         }
+    }
+    while (choice != 3);
 
 }
 
 void inputDistance(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int *cityCount)
 {
+    displayCities(cities, cityCount);
      if(*cityCount < 2)
     {
         printf("No enough cities added yet!\n");
@@ -256,23 +270,23 @@ void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][
         return;
     }
 
-    printf("\n          Distance Table (km)\n");
+    printf("\nDistance Table (km)\n");
 
-    printf("%12s", " ");
+    printf("\n%-15s", " ");
     for (int i = 0; i < *cityCount; i++) {
-        printf("%12s", cities[i]);
+        printf("%-12s", cities[i]);
     }
     printf("\n");
 
     for (int i = 0; i < *cityCount; i++) {
-        printf("%12s", cities[i]);
+        printf("%-15s", cities[i]);
         for (int j = 0; j < *cityCount; j++) {
             if (i == j) {
-                printf("%12d", 0);
+                printf("%-12d", 0);
             } else if (distance[i][j] == 0) {
-                printf("%12s", "--");
+                printf("%-12s", "--");
             } else {
-                printf("%12d", distance[i][j]);
+                printf("%-12d", distance[i][j]);
             }
         }
         printf("\n");
@@ -280,8 +294,15 @@ void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][
 }
 
 //delivery
-void deliveryRequest(float vCapacity[3])
+void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3])
 {
+    if(cityCount < 2) {
+        printf("Need at least 2 cities to process delivery.\n");
+        return;
+    }
+
+    displayCities(cities, &cityCount);
+
     int src, dest, vType;
     float weight;
 
@@ -297,6 +318,13 @@ void deliveryRequest(float vCapacity[3])
 
     printf("Enter weight (kg): ");
     scanf("%f", &weight);
+
+    printf("\nVehicle Types:\n");
+    for(int i = 0; i < 3; i++) {
+        printf("%d. %s (Capacity: %d kg, Rate: %.2f LKR/km)\n",
+               i + 1, vehicleTypes[i], vCapacity[i], vRate[i]);
+    }
+
     printf("Select vehicle (1=Van, 2=Truck, 3=Lorry): ");
     scanf("%d", &vType);
 
@@ -304,4 +332,6 @@ void deliveryRequest(float vCapacity[3])
         printf("Weight exceeds vehicle capacity!\n");
         return;
     }
+
+
 }
