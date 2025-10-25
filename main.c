@@ -4,6 +4,7 @@
 
 #define MAX_CITIES 30
 #define MAX_DELIVERIES 50
+#define FUEL_PRICE 310.0
 
 void cityManagement();
 void addCity(char cities[MAX_CITIES][50], int *cityCount);
@@ -16,6 +17,13 @@ void inputDistance(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CIT
 void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int *cityCount);
 
 void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3]);
+
+float calculateDeliveryCost(float D, float R, int weight);
+float calculateDeliveryTime(float D, float S);
+float calculateFuelUsed(float D, float E);
+float calculateFuelCost(float fuelUsed);
+float calculateProfit(float cost);
+float calculateCustomerCharge(float totalCost, float profit);
 
 char cities[MAX_CITIES][50];
 int distance[MAX_CITIES][MAX_CITIES];
@@ -335,3 +343,34 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
 
 
 }
+
+float calculateDeliveryCost(float D, float R, int weight)
+{
+    return D*R*(1.0+(weight/10000.0));
+}
+
+float calculateDeliveryTime(float D, float S)
+{
+    return D/S;
+}
+
+float calculateFuelUsed(float D, float E)
+{
+    return D/E;
+}
+
+float calculateFuelCost(float fuelUsed)
+{
+    return fuelUsed*FUEL_PRICE;
+}
+
+float calculateProfit(float cost)
+{
+    return cost*0.25;
+}
+
+float calculateCustomerCharge(float totalCost, float profit)
+{
+    return totalCost+profit;
+}
+
