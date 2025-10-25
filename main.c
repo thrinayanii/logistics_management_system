@@ -27,7 +27,39 @@ float vFuelEfficiency[3] = {12.0, 6.0, 4.0};
 
 int main()
 {
-    cityManagement();
+    do{
+        printf("\n\n===== LOGISTICS MANAGEMENT SYSTEM ======\n\n");
+        printf("1. City Management\n");
+        printf("2. Distance Management\n");
+        printf("3. New Delivery Request\n");
+        printf("4. View Delivery Records\n");
+        printf("5. Performance Reports\n");
+        printf("6. Exit\n");
+
+        switch(choice) {
+                case 1:
+                    cityManagement();
+                    break;
+                case 2:
+                    distanceManagement();
+                    break;
+                case 3:
+                    deliveryRequest();
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
+                    break;
+                case 6:
+                    printf("\nExiting the Logistics Management System...\n");
+                    break;
+                default:
+                    printf("Invalid choice! Please try again.\n");
+            }
+        } while(choice != 6);
+
     return 0;
 }
 
