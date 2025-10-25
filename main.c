@@ -6,9 +6,9 @@
 #define MAX_DELIVERIES 50
 
 void cityManagement();
-void addCity(char cities[MAX_CITIES][50], int cityCount);
-void renameCity(char cities[MAX_CITIES][50], int cityCount);
-void removeCity(char cities[MAX_CITIES][50], int cityCount);
+void addCity(char cities[MAX_CITIES][50], int *cityCount);
+void renameCity(char cities[MAX_CITIES][50], int *cityCount);
+void removeCity(char cities[MAX_CITIES][50], int *cityCount);
 
 void distanceManagement();
 void inputDistance(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int cityCount);
@@ -41,13 +41,13 @@ void cityManagement()
 
         switch(choice) {
             case 1:
-                addCity(cities, cityCount);
+                addCity(cities, &cityCount);
                 break;
             case 2:
-                renameCity(cities, cityCount);
+                renameCity(cities, &cityCount);
                 break;
             case 3:
-                removeCity(cities,cityCount);
+                removeCity(cities, &cityCount);
                 break;
             default:
                 printf("Invalid choice!\n");
@@ -55,35 +55,35 @@ void cityManagement()
 
 }
 
-void addCity(char cities[MAX_CITIES][50], int cityCount)
+void addCity(char cities[MAX_CITIES][50], int *cityCount)
 {
-    if(cityCount>=MAX_CITIES)
+    if(*cityCount>=MAX_CITIES)
     {
         printf("Maximum city limit reached!\n");
         return;
     }
 
     int n;
-    printf("Number of cities to add: (max=%d)",MAX_CITIES-cityCount);
+    printf("Number of cities to add: (max=%d)",MAX_CITIES-*cityCount);
     scanf("%d",&n);
 
-    if(n>MAX_CITIES-cityCount){
+    if(n>MAX_CITIES-*cityCount){
         printf("Invalid number!\n");
         return;
     }
     for(int i=0; i<n; i++)
     {
         printf("Enter the city %d name: ",i+1);
-        scanf("%s", cities[cityCount]);
-        cityCount++;
+        scanf("%s", cities[*cityCount]);
+        (*cityCount)++;
     }
 
     printf("Cities added successfully!\n");
 }
 
-void renameCity(char cities[MAX_CITIES][50], int cityCount)
+void renameCity(char cities[MAX_CITIES][50], int *cityCount)
 {
-    if(cityCount == 0)
+    if(*cityCount == 0)
     {
         printf("No cities added yet to rename!\n");
         return;
@@ -99,9 +99,9 @@ void renameCity(char cities[MAX_CITIES][50], int cityCount)
     printf("City renamed successfully");
 }
 
-void removeCity(char cities[MAX_CITIES][50], int cityCount)
+void removeCity(char cities[MAX_CITIES][50], int *cityCount)
 {
-    if(cityCount == 0)
+    if(*cityCount == 0)
     {
         printf("No cities added yet to remove!\n");
         return;
@@ -111,16 +111,16 @@ void removeCity(char cities[MAX_CITIES][50], int cityCount)
     printf("Enter city index remove");
     scanf("%d", &index);
 
-    if(index <= 0 || index > cityCount) {
+    if(index <= 0 || index > *cityCount) {
         printf("Invalid index!\n");
         return;
     }
 
-    for(int i = index; i < cityCount - 1; i++)
+    for(int i = index; i < *cityCount - 1; i++)
     {
         strcpy(cities[i], cities[i+1]);
     }
-    cityCount--;
+    (*cityCount)--;
     printf("City removed.\n");
 
 }
