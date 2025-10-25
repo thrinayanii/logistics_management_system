@@ -3,11 +3,13 @@
 #include <string.h>
 
 #define MAX_CITIES 30
+#define MAX_DELIVERIES 50
 
 void cityManagement();
 void addCity(char cities[MAX_CITIES][50], int cityCount);
 void renameCity(char cities[MAX_CITIES][50], int cityCount);
 void removeCity(char cities[MAX_CITIES][50], int cityCount);
+
 void distanceManagement();
 void inputDistance(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int cityCount);
 void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES], int cityCount);
@@ -15,6 +17,12 @@ void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][
 char cities[MAX_CITIES][50];
 int distance[MAX_CITIES][MAX_CITIES];
 int cityCount=0;
+
+char vehicleTypes[3][10] = {"Van", "Truck", "Lorry"};
+int vCapacity[3] = {1000, 5000, 10000};
+float vRate[3] = {30.0, 40.0, 80.0};
+float vSpeed[3] = {60.0, 50.0, 45.0};
+float vFuelEfficiency[3] = {12.0, 6.0, 4.0};
 
 int main()
 {
@@ -213,5 +221,32 @@ void displayDistanceTable(char cities[MAX_CITIES][50], int distance[MAX_CITIES][
             }
         }
         printf("\n");
+    }
+}
+
+//delivery
+void deliveryRequest(float vCapacity[3])
+{
+    int src, dest, vType;
+    float weight;
+
+    printf("Enter source city index: ");
+    scanf("%d", &src);
+    printf("Enter destination city index: ");
+    scanf("%d", &dest);
+
+    if(src == dest) {
+        printf("Source and destination cannot be the same!\n");
+        return;
+    }
+
+    printf("Enter weight (kg): ");
+    scanf("%f", &weight);
+    printf("Select vehicle (1=Van, 2=Truck, 3=Lorry): ");
+    scanf("%d", &vType);
+
+    if(weight > vCapacity[vType-1]) {
+        printf("Weight exceeds vehicle capacity!\n");
+        return;
     }
 }
