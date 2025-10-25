@@ -37,6 +37,12 @@ float vRate[3] = {30.0, 40.0, 80.0};
 float vSpeed[3] = {60.0, 50.0, 45.0};
 float vFuelEfficiency[3] = {12.0, 6.0, 4.0};
 
+int deliveryDistance[MAX_DELIVERIES];
+float deliveryCharge[MAX_DELIVERIES];
+float deliveryProfit[MAX_DELIVERIES];
+float deliveryTimeArr[MAX_DELIVERIES];
+int deliveryCount = 0;
+
 int main()
 {
     int choice;
@@ -45,9 +51,8 @@ int main()
         printf("1. City Management\n");
         printf("2. Distance Management\n");
         printf("3. New Delivery Request\n");
-        printf("4. View Delivery Records\n");
-        printf("5. Performance Reports\n");
-        printf("6. Exit\n");
+        printf("4. Performance Reports\n");
+        printf("5. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -65,15 +70,12 @@ int main()
 
                     break;
                 case 5:
-
-                    break;
-                case 6:
                     printf("\nExiting the Logistics Management System...\n");
                     break;
                 default:
                     printf("Invalid choice! Please try again.\n");
             }
-        } while(choice != 6);
+        } while(choice != 5);
 
     return 0;
 }
@@ -367,16 +369,22 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
     printf("From: %s\n", cities[src]);
     printf("To: %s\n", cities[dest]);
     printf("Minimum Distance: %d km\n",minDist);
-    printf("Vehicle: %s\n", vehicleTypes[vType]);
+    printf("Vehicle: %s\n", vehicleTypes[vType-1]);
     printf("Weight: %.2f kg\n",weight);
     printf("-----------------------------------------------\n");
-    printf("Base Cost:%d x %.0f x (1+%.0f/10000) %.2f LKR\n",minDist,vRate[vType],weight, baseCost);
+    printf("Base Cost:%d x %.0f x (1+%.0f/10000) %.2f LKR\n",minDist,vRate[vType-1],weight, baseCost);
     printf("Fuel Used: %.2f L\n", fuelUsed);
     printf("Fuel Cost: %.2f LKR\n",fuelCost);
     printf("Operational Cost: %.2f LKR\n",totalCost);
     printf("Profit: %.2f LKR\n",profit);
     printf("Customer Charge: %.2f LKR\n",customerCharge);
     printf("Estimated Time: %.2f hours\n",deliveryTime);
+
+    deliveryDistance[deliveryCount] = minDist;
+    deliveryCharge[deliveryCount] = customerCharge;
+    deliveryProfit[deliveryCount] = profit;
+    deliveryTimeArr[deliveryCount] = deliveryTime;
+    deliveryCount++;
 }
 
 float calculateDeliveryCost(float D, float R, float weight)
@@ -446,4 +454,9 @@ void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, in
             }
         }
     }
+}
+
+void generateReports()
+{
+
 }
