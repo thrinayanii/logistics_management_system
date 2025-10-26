@@ -26,6 +26,7 @@ float calculateProfit(float cost);
 float calculateCustomerCharge(float totalCost, float profit);
 
 void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, int *minDist, int path[4], int *pathLen, int cityCount);
+void generateReports(int deliveryCount);
 
 char cities[MAX_CITIES][50];
 int distance[MAX_CITIES][MAX_CITIES];
@@ -67,7 +68,7 @@ int main()
                     deliveryRequest(vCapacity, vehicleTypes, vRate);
                     break;
                 case 4:
-
+                    generateReports(deliveryCount);
                     break;
                 case 5:
                     printf("\nExiting the Logistics Management System...\n");
@@ -366,13 +367,13 @@ void deliveryRequest(float vCapacity[3], char vehicleTypes[3][10], float vRate[3
 
     printf("\nDELIVERY COST ESTIMATION\n");
     printf("----------------------------------------------\n\n");
-    printf("From: %s\n", cities[src]);
-    printf("To: %s\n", cities[dest]);
+    printf("From: %s\n", cities[src-1]);
+    printf("To: %s\n", cities[dest-1]);
     printf("Minimum Distance: %d km\n",minDist);
     printf("Vehicle: %s\n", vehicleTypes[vType-1]);
     printf("Weight: %.2f kg\n",weight);
     printf("-----------------------------------------------\n");
-    printf("Base Cost:%d x %.0f x (1+%.0f/10000) %.2f LKR\n",minDist,vRate[vType-1],weight, baseCost);
+    printf("Base Cost:%d x %.0f x (1+%.0f/10000) = %.2f LKR\n",minDist,vRate[vType-1],weight, baseCost);
     printf("Fuel Used: %.2f L\n", fuelUsed);
     printf("Fuel Cost: %.2f LKR\n",fuelCost);
     printf("Operational Cost: %.2f LKR\n",totalCost);
@@ -456,7 +457,42 @@ void findMinDistance(int distance[MAX_CITIES][MAX_CITIES], int src, int dest, in
     }
 }
 
-void generateReports()
+void generateReports(int deliveryCount)
 {
+    if(deliveryCount == 0) {
+        printf("No delivery data available.\n");
+        printf("Please complete at least one delivery first.\n");
+        return;
+    }
 
+    float totDistance = 0;
+    float AvgTime = 0;
+    float totRevenue = 0;
+    float profit = 0;
+    float longestRoute = deliveryDistance[0];
+    float shortestRoute = deliveryDistance[0];
+
+    for(int i = 0; i < deliveryCount; i++)
+    {
+        totDistance += deliveryDistance[i];
+        AvgTime += deliveryTime[i];
+        totRevenue += deliveryCharge[i];
+        profit += deliveryProfit[i];
+
+        if(deliveryDistance[i] > longestRoute) {
+            longestRoute = deliveryDistance[i];
+        }
+        if(deliveryDistance[i] < shortestRoute) {
+            shortestRoute = deliveryDistance[i];
+        }
+    }
+
+    printf("\nPerformance Report\n");
+    printf("Total Deliveries Completed: %d\n", deliveryCount);
+    printf("Total Distance Covered: %.2f km\n", totDistance);
+    printf("Average Delivery Time: %.2f hours\n", AvgTime / deliveryCount);
+    printf("Total Revenue: %.2f LKR\n", totRevenue);
+    printf("Total Profit: %.2f LKR\n", profit);
+    printf("Longest Route: %.2f km\n", longestRoute);
+    printf("Shortest Route: %.2f km\n", shortestRoute);
 }
